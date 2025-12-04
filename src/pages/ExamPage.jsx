@@ -27,6 +27,8 @@ const ExamPage = () => {
     const [timeLeft, setTimeLeft] = useState(90 * 60); // 90 minutes in seconds
     const [score, setScore] = useState(0);
     const [showOverview, setShowOverview] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [confirmCallback, setConfirmCallback] = useState(null);
 
     // Persist dark mode to localStorage whenever it changes
     useEffect(() => {
@@ -36,6 +38,25 @@ const ExamPage = () => {
     // Toggle theme handler
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
+    };
+
+    // Custom confirm handler
+    const showConfirm = (callback) => {
+        setConfirmCallback(() => callback);
+        setShowConfirmModal(true);
+    };
+
+    const handleConfirm = () => {
+        if (confirmCallback) {
+            confirmCallback();
+        }
+        setShowConfirmModal(false);
+        setConfirmCallback(null);
+    };
+
+    const handleCancel = () => {
+        setShowConfirmModal(false);
+        setConfirmCallback(null);
     };
 
     // Initialize Exam
@@ -220,47 +241,67 @@ const ExamPage = () => {
     return (
         <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${containerClasses} ${bgPattern}`}>
             {/* Header */}
-            <header className={`fixed top-0 w-full px-6 py-4 border-b z-50 ${headerBorderClass}`}>
+            <header className={`fixed top-0 w-full px-3 md:px-6 py-3 md:py-4 border-b z-50 ${headerBorderClass}`}>
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <span className={`font-mono text-xl font-bold ${accentColor}`}>&gt;</span>
+                    {/* Left Section */}
+                    <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                        <span className={`font-mono text-lg md:text-xl font-bold ${accentColor} hidden sm:inline`}>&gt;</span>
                         <h1
                             onClick={() => {
                                 setExamStatus('intro');
                                 setQuestions([]);
                                 setCurrentQuestionIndex(0);
                             }}
-                            className="text-xl md:text-2xl font-bold tracking-tight font-mono cursor-pointer hover:opacity-80 transition-opacity"
+                            className="text-base md:text-xl lg:text-2xl font-bold tracking-tight font-mono cursor-pointer hover:opacity-80 transition-opacity truncate"
                         >
-                            AI Trainer <span className={`text-sm px-2 py-0.5 rounded border ${isDarkMode ? "border-[#bd93f9]/30 text-[#bd93f9]" : "border-purple-200 text-purple-600"}`}>Lvl.3</span>
+                            <span className="hidden sm:inline">AI Trainer</span>
+                            <span className="sm:hidden">AI</span>
+                            {' '}
+                            <span className={`text-xs md:text-sm px-1.5 md:px-2 py-0.5 rounded border ${isDarkMode ? "border-[#bd93f9]/30 text-[#bd93f9]" : "border-purple-200 text-purple-600"}`}>Lvl.3</span>
                         </h1>
                         {examStatus === 'in_progress' && (
-                            <span className={`text-sm px-2 py-0.5 rounded border ${mode === 'practice' ? (isDarkMode ? "border-[#bd93f9]/30 text-[#bd93f9]" : "border-purple-200 text-purple-600") : (isDarkMode ? "border-[#00ff9d]/30 text-[#00ff9d]" : "border-blue-200 text-blue-600")}`}>
+                            <span className={`hidden md:inline text-sm px-2 py-0.5 rounded border whitespace-nowrap ${mode === 'practice' ? (isDarkMode ? "border-[#bd93f9]/30 text-[#bd93f9]" : "border-purple-200 text-purple-600") : (isDarkMode ? "border-[#00ff9d]/30 text-[#00ff9d]" : "border-blue-200 text-blue-600")}`}>
                                 {mode === 'practice' ? '📚 刷题模式' : '📝 考试模式'}
                             </span>
                         )}
                     </div>
-                    <div className="flex items-center gap-4">
+
+                    {/* Right Section */}
+                    <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
                         {examStatus === 'in_progress' && (
                             <>
                                 <button
                                     onClick={() => setShowOverview(!showOverview)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-mono flex items-center gap-2 ${buttonClasses}`}
+                                    className={`px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-mono flex items-center gap-1 md:gap-2 ${buttonClasses}`}
+                                    title="答题卡"
                                 >
-                                    📋 答题卡
+                                    <span>📋</span>
+                                    <span className="hidden sm:inline">答题卡</span>
                                 </button>
                                 {mode === 'exam' && (
-                                    <span className={`font-mono text-xl font-bold ${timeLeft < 300 ? "text-red-500 animate-pulse" : accentColor}`}>
-                                        {formatTime(timeLeft)}
-                                    </span>
+                                    <>
+                                        <button
+                                            onClick={() => showConfirm(submitExam)}
+                                            className={`px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-bold flex items-center gap-1 whitespace-nowrap ${isDarkMode ? "bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500/30" : "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"}`}
+                                            title="交卷"
+                                        >
+                                            <span>✅</span>
+                                            <span className="hidden sm:inline">交卷</span>
+                                        </button>
+                                        <span className={`font-mono text-base md:text-xl font-bold ${timeLeft < 300 ? "text-red-500 animate-pulse" : accentColor}`}>
+                                            {formatTime(timeLeft)}
+                                        </span>
+                                    </>
                                 )}
                             </>
                         )}
                         <button
                             onClick={toggleTheme}
-                            className={`px-4 py-2 rounded-lg text-sm font-mono flex items-center gap-2 ${buttonClasses}`}
+                            className={`px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-mono flex items-center gap-1 md:gap-2 ${buttonClasses}`}
+                            title={isDarkMode ? "切换到浅色模式" : "切换到深色模式"}
                         >
-                            {isDarkMode ? "☀ Light" : "🌙 Dark"}
+                            <span>{isDarkMode ? "☀" : "🌙"}</span>
+                            <span className="hidden lg:inline">{isDarkMode ? "Light" : "Dark"}</span>
                         </button>
                     </div>
                 </div>
@@ -483,12 +524,25 @@ const ExamPage = () => {
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-2xl font-bold">答题概览</h3>
-                                <button
-                                    onClick={() => setShowOverview(false)}
-                                    className={`px-4 py-2 rounded-lg ${buttonClasses}`}
-                                >
-                                    ✕ 关闭
-                                </button>
+                                <div className="flex gap-3">
+                                    {mode === 'exam' && (
+                                        <button
+                                            onClick={() => showConfirm(() => {
+                                                submitExam();
+                                                setShowOverview(false);
+                                            })}
+                                            className={`px-4 py-2 rounded-lg text-sm font-bold ${isDarkMode ? "bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500/30" : "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"}`}
+                                        >
+                                            ✅ 交卷
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() => setShowOverview(false)}
+                                        className={`px-4 py-2 rounded-lg ${buttonClasses}`}
+                                    >
+                                        ✕ 关闭
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Statistics */}
@@ -566,6 +620,52 @@ const ExamPage = () => {
                 )}
 
             </main>
+
+            {/* Custom Confirmation Modal */}
+            {showConfirmModal && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn"
+                    onClick={handleCancel}
+                >
+                    <div
+                        className={`max-w-md w-full p-6 md:p-8 rounded-2xl border backdrop-blur-xl transform transition-all duration-300 animate-scaleIn ${cardClasses} shadow-2xl`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Icon */}
+                        <div className="flex justify-center mb-6">
+                            <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-red-500/20' : 'bg-red-50'}`}>
+                                <span className="text-3xl md:text-4xl">⚠️</span>
+                            </div>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-xl md:text-2xl font-bold text-center mb-3">
+                            确定要提前交卷吗？
+                        </h3>
+
+                        {/* Description */}
+                        <p className={`text-center mb-8 text-sm md:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            这将结束考试并计算分数，请确认所有题目都已完成。
+                        </p>
+
+                        {/* Buttons */}
+                        <div className="flex flex-col-reverse md:flex-row gap-3">
+                            <button
+                                onClick={handleCancel}
+                                className={`flex-1 px-6 py-3 md:py-3.5 rounded-xl font-bold text-sm md:text-base transition-all duration-300 ${isDarkMode ? 'bg-[#27272a] hover:bg-[#3f3f46] text-white border border-[#27272a] hover:border-[#71717a]' : 'bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-200'}`}
+                            >
+                                取消
+                            </button>
+                            <button
+                                onClick={handleConfirm}
+                                className={`flex-1 px-6 py-3 md:py-3.5 rounded-xl font-bold text-sm md:text-base transition-all duration-300 ${isDarkMode ? 'bg-red-500 hover:bg-red-600 text-white shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]' : 'bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl'}`}
+                            >
+                                确定交卷
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

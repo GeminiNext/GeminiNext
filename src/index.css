@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  
-  --color-geek-bg: #050505;
-  --color-geek-card: #0f0f0f;
-  --color-geek-border: #27272a;
-  --color-geek-primary: #00ff9d;
-  --color-geek-secondary: #bd93f9;
-  --color-geek-accent: #ff79c6;
-  --color-geek-dim: #71717a;
+    --font-sans: "Inter", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
 
-  --image-grid-pattern: linear-gradient(to right, #1f1f1f 1px, transparent 1px), linear-gradient(to bottom, #1f1f1f 1px, transparent 1px);
+    --color-geek-bg: #050505;
+    --color-geek-card: #0f0f0f;
+    --color-geek-border: #27272a;
+    --color-geek-primary: #00ff9d;
+    --color-geek-secondary: #bd93f9;
+    --color-geek-accent: #ff79c6;
+    --color-geek-dim: #71717a;
+
+    --image-grid-pattern: linear-gradient(to right, #1f1f1f 1px, transparent 1px), linear-gradient(to bottom, #1f1f1f 1px, transparent 1px);
 }
 
 body {
     background-color: var(--color-geek-bg);
     background-size: 40px 40px;
     background-image: linear-gradient(to right, #121212 1px, transparent 1px), linear-gradient(to bottom, #121212 1px, transparent 1px);
-    color: #d1d5db; /* text-gray-300 */
+    color: #d1d5db;
+    /* text-gray-300 */
 }
 
 .glass-card {
@@ -40,4 +41,35 @@ body {
 .tool-tag:hover {
     transform: translateY(-2px);
     color: #fff;
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.2s ease-out;
+}
+
+.animate-scaleIn {
+    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
