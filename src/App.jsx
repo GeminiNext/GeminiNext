@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ExamPage from './pages/ExamPage';
+import ExamOperatePage from './pages/ExamOperatePage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           </div>
         } />
         <Route path="/exam" element={<ExamPage />} />
+        <Route path="/exam_operate" element={<ExamOperatePage />} />
       </Routes>
     </Router>
   );
