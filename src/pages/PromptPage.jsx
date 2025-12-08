@@ -229,7 +229,7 @@ const PromptPage = () => {
                         <div className="relative max-w-[90vw] max-h-[90vh] glass-card p-2 rounded-xl group/modal">
                             <button
                                 onClick={closeImageModal}
-                                className="absolute -top-4 -right-4 bg-geek-card text-white p-2 rounded-full border border-geek-primary hover:bg-geek-primary hover:text-black transition-all z-10"
+                                className="absolute -top-4 -right-4 w-10 h-10 flex items-center justify-center bg-geek-card text-white rounded-full border-2 border-geek-primary hover:bg-geek-primary hover:text-black transition-all z-10 text-xl font-bold"
                             >
                                 ✕
                             </button>
@@ -247,13 +247,13 @@ const PromptPage = () => {
                                 <>
                                     <button
                                         onClick={prevModalImage}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-geek-card/90 hover:bg-geek-primary text-white hover:text-black p-3 rounded-full border border-geek-primary transition-all z-10"
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-geek-card/90 hover:bg-geek-primary text-white hover:text-black rounded-full border-2 border-geek-primary transition-all z-10 text-2xl font-bold"
                                     >
                                         ←
                                     </button>
                                     <button
                                         onClick={nextModalImage}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-geek-card/90 hover:bg-geek-primary text-white hover:text-black p-3 rounded-full border border-geek-primary transition-all z-10"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-geek-card/90 hover:bg-geek-primary text-white hover:text-black rounded-full border-2 border-geek-primary transition-all z-10 text-2xl font-bold"
                                     >
                                         →
                                     </button>
