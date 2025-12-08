@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ThemeToggle from '../components/ThemeToggle';
 import questionBank from '../data/question_bank_clean.json';
 
 const ExamPage = () => {
@@ -30,15 +31,23 @@ const ExamPage = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [confirmCallback, setConfirmCallback] = useState(null);
 
-    // Persist dark mode to localStorage whenever it changes
+    // Listen to theme changes from ThemeToggle component
     useEffect(() => {
-        localStorage.setItem('examPageDarkMode', JSON.stringify(isDarkMode));
-    }, [isDarkMode]);
+        const handleStorageChange = () => {
+            const saved = localStorage.getItem('examPageDarkMode');
+            if (saved !== null) {
+                setIsDarkMode(JSON.parse(saved));
+            }
+        };
 
-    // Toggle theme handler
-    const toggleTheme = () => {
-        setIsDarkMode(!isDarkMode);
-    };
+        window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('theme-change', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('theme-change', handleStorageChange);
+        };
+    }, []);
 
     // Custom confirm handler
     const showConfirm = (callback) => {
@@ -303,14 +312,15 @@ const ExamPage = () => {
                             <span>🔍</span>
                             <span className="hidden leading-none lg:inline">题库</span>
                         </a>
-                        <button
-                            onClick={toggleTheme}
+                        <a
+                            href="/exam_operate"
                             className={`px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-mono flex items-center gap-1 md:gap-2 ${buttonClasses}`}
-                            title={isDarkMode ? "切换到浅色模式" : "切换到深色模式"}
+                            title="实操知识库"
                         >
-                            <span>{isDarkMode ? "☀" : "🌙"}</span>
-                            <span className="hidden lg:inline">{isDarkMode ? "Light" : "Dark"}</span>
-                        </button>
+                            <span>💻</span>
+                            <span className="hidden leading-none lg:inline">实操库</span>
+                        </a>
+                        <ThemeToggle />
                     </div>
                 </div>
             </header>
