@@ -210,5 +210,49 @@ export const operateKnowledgeData = [
                 ]
             },
         ]
+    },
+    {
+        category: "深度学习与图像处理",
+        items: [
+            {
+                title: "模型推理 (ONNX)",
+                tags: ["onnxruntime"],
+                desc: "加载ONNX模型、获取输入信息及运行推理",
+                code: [
+                    `session = ort.InferenceSession('model.onnx')`,
+                    `input_name = session.get_inputs().name`,
+                    `output = session.run(output_name, {input_name: input_data})`
+                ]
+            },
+            {
+                title: "图像处理 (PIL)",
+                tags: ["PIL"],
+                desc: "使用PIL库打开图像、转换格式及调整尺寸",
+                code: [
+                    `image = Image.open('image.jpg').convert('RGB')`,
+                    `image = image.resize((width, height))`
+                ]
+            },
+            {
+                title: "图像处理 (OpenCV)",
+                tags: ["opencv"],
+                desc: "使用OpenCV读取图像及调整尺寸",
+                code: [
+                    `image = cv2.imread('image.jpg')`,
+                    `image = cv2.resize(image, (width, height))`
+                ]
+            },
+            {
+                title: "数据后处理与辅助",
+                tags: ["numpy", "scipy", "python"],
+                desc: "Softmax概率计算、获取最大值索引、维度扩展及字符串清洗",
+                code: [
+                    `probabilities = scipy.special.softmax(probabilities)`,
+                    `predicted_class = np.argmax(probabilities)`,
+                    `image = np.expand_dims(image, axis=0)`,
+                    `cleaned_name = name.strip()`
+                ]
+            }
+        ]
     }
 ];
